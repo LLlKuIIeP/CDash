@@ -1,0 +1,108 @@
+# -----------------------------------------------------------
+# -- Get environment
+# -----------------------------------------------------------
+
+## -- Set hostname/site
+## --------------------------
+include(ProcessorCount)
+set(CTEST_SITE "@CDASH_PROJECT@-site")
+
+## -- Set build name
+## --------------------------
+set(CTEST_BUILD_NAME "@CTEST_BUILD_NAME@")
+
+# -----------------------------------------------------------
+# -- build specific
+# -----------------------------------------------------------
+set(MODEL "Experimental")
+set(CTEST_SOURCE_DIRECTORY "@CMAKE_SOURCE_DIR_ABSOLUTE@")
+set(CTEST_BINARY_DIRECTORY "@CMAKE_BINARY_DIR_ABSOLUTE@")
+#set(OPTION_BUILD "-j16")
+set(CTEST_CONFIGURATION_TYPE Debug)
+set(CTEST_CMAKE_GENERATOR "@CTEST_CMAKE_GENERATOR@")
+set(CTEST_CMAKE_GENERATOR_PLATFORM "@CMAKE_GENERATOR_PLATFORM@")
+set(CTEST_MEMORYCHECK_TYPE "@CTEST_MEMORYCHECK_TYPE@")
+#set(CTEST_MEMORYCHECK_COMMAND "usr/bin/valgrind")
+#set(CTEST_MEMORYCHECK_COMMAND_OPTIONS "--trace-children=yes --leak-check=full")
+
+# -----------------------------------------------------------
+# -- Configure CTest
+# -----------------------------------------------------------
+## -- read CTestCustom.cmake file
+ctest_read_custom_files("${CTEST_BINARY_DIRECTORY}")
+
+# -----------------------------------------------------------
+# -- Settings
+# -----------------------------------------------------------
+
+## -- Process timeout in seconds
+set(CTEST_TIMEOUT "7200")
+## -- Set output to english
+set($ENV{LC_MESSSAGES} "en_EN")
+
+# -----------------------------------------------------------
+# -- Run CTest
+# -----------------------------------------------------------
+
+### --- Start
+ctest_start(${MODEL} TRACK ${MODEL})
+
+### --- Configure
+ctest_configure(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)
+
+
+ProcessorCount(N)
+if (N GREATER_EQUAL 16)
+  set(N 16)
+endif ()
+
+if (UNIX)
+  set(CTEST_BUILD_FLAGS -j${N})
+  #set(ctest_test_args \${ctest_test_args} PARALLEL_LEVEL \${N})
+endif ()
+
+### --- BUILD
+ctest_build(BUILD "${CTEST_BINARY_DIRECTORY}"
+                       NUMBER_ERRORS num_err
+                       NUMBER_WARNINGS num_war
+                       RETURN_VALUE res_bld)
+
+# ### --- получение ошибок и предупреждений во время билда
+# if (UNIX)
+#   execute_process(COMMAND echo ${num_err}
+#                   OUTPUT_FILE ${CTEST_BINARY_DIRECTORY}/build-err
+#                   RESULT_VARIABLE RESULT_VAR
+#                   ERROR_QUIET)
+#   execute_process(COMMAND echo ${num_war}
+#                   OUTPUT_FILE ${CTEST_BINARY_DIRECTORY}/build-war
+#                   RESULT_VARIABLE RESULT_VAR
+#                   ERROR_QUIET)
+# elseif (WIN32)
+#   execute_process(COMMAND "cmd" /c "echo ${num_err}"
+#                   OUTPUT_FILE ${CTEST_BINARY_DIRECTORY}/build-err
+#                   RESULT_VARIABLE RESULT_VAR
+#                   ERROR_QUIET)
+#   execute_process(COMMAND "cmd" /c "echo ${num_war}"
+#                   OUTPUT_FILE ${CTEST_BINARY_DIRECTORY}/build-war
+#                   RESULT_VARIABLE RESULT_VAR
+#                   ERROR_QUIET)
+# endif ()
+#
+# ### --- TEST
+ctest_memcheck(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)
+ctest_test(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)
+ctest_submit(BUILD_ID build_id RETURN_VALUE res)
+
+
+# ### --- получение номера билда
+# if (UNIX)
+#   execute_process(COMMAND echo ${build_id}
+#                   OUTPUT_FILE ${CTEST_BINARY_DIRECTORY}/build-id
+#                   RESULT_VARIABLE RESULT_VAR
+#                   ERROR_QUIET)
+# elseif (WIN32)
+#   execute_process(COMMAND "cmd" /c "echo ${build_id}"
+#                   OUTPUT_FILE ${CTEST_BINARY_DIRECTORY}/build-id
+#                   RESULT_VARIABLE RESULT_VAR
+#                   ERROR_QUIET)
+# endif ()

@@ -1,0 +1,62 @@
+macro(qt_custom_error_exception)
+  set(CTEST_CUSTOM_ERROR_EXCEPTION
+    ${CTEST_CUSTOM_ERROR_EXCEPTION}
+    ".*_autogen.*"
+    ".*[\\\\/]include[\\\\/][Qq]t[Cc]ore[\\\\/].*"
+    ".*[\\\\/]include[\\\\/][Qq]t[Ww]idgets[\\\\/].*"
+    ".*[\\\\/]include[\\\\/][Qq]t[Gg]ui[\\\\/].*"
+    ".*subproject[\\\\/].*[\\\\/]moc_.*"
+  )
+endmacro()
+
+macro(thirdparty_custom_error_exception)
+  set(CTEST_CUSTOM_ERROR_EXCEPTION
+    ${CTEST_CUSTOM_ERROR_EXCEPTION}
+    ".*/x86_64-linux-gnu/.*"
+    ".*[\\\\/]qwt[\\\\/].*"
+    ".*[\\\\/]catch2[\\\\/].*"
+    ".*[\\\\/]boost[\\\\/].*"
+    ".*[\\\\/]exprtk[\\\\/].*"
+    ".*extern[\\\\/]json_utils[\\\\/].*"
+    ".*extern[\\\\/][Ee]igen[\\\\/].*"
+    ".*extern[\\\\/]platform_thirdparty[\\\\/].*"
+    ".*extern[\\\\/]proj4[\\\\/].*"
+    ".*extern[\\\\/]visualizer_3d[\\\\/].*"
+    ".*extern[\\\\/]common_utils[\\\\/].*"
+    ".*extern[\\\\/]spectra[\\\\/].*"
+    ".*extern[\\\\/]drillhydro[\\\\/].*"
+    ".*extern[\\\\/][Hh]ydro[Rr]ing[\\\\/].*"
+    ".*extern[\\\\/]gdm_thirdparty[\\\\/].*"
+    ".*extern[\\\\/]gdm_common[\\\\/].*"
+    ".*extern[\\\\/]geographiclib[\\\\/].*"
+    ".*app[\\\\/]witsml_monitoring_server[\\\\/]lib[\\\\/]q_json_web_token[\\\\/].*"
+    ".*app[\\\\/]witsml_monitoring_server[\\\\/]lib[\\\\/]qt_web_app[\\\\/].*"
+    ".*app[\\\\/]witsml_monitoring_server[\\\\/]lib[\\\\/]cpp-httplib[\\\\/].*"
+    ".*thirdparty[\\\\/]cavalier_contours[\\\\/].*"
+    )
+endmacro()
+
+macro(cppcheck_custom_error_exception)
+  set(CTEST_CUSTOM_ERROR_EXCEPTION
+    ${CTEST_CUSTOM_ERROR_EXCEPTION}
+    ".*[\\\\/]visualizer_3d[\\\\/].*"
+    ".*visualizer_.*entity_storage.*"
+    ".*visualizer_.*kdtree.*"
+    ".*[\\\\/]QtWebApp[\\\\/].*"
+  )
+endmacro()
+
+macro(clang_tidy_custom_error_exception)
+  set(CTEST_CUSTOM_ERROR_EXCEPTION
+    ${CTEST_CUSTOM_ERROR_EXCEPTION}
+    ".*[\\\\/]build[\\\\/]subproject[\\\\/].*"
+    ".*include[\\\\/]moc_.*"
+    ".*: errors_\\(\\).*document_\\(\\).*begin_\\(\\).*end_\\(\\).*current_\\(\\).*lastValueEnd_\\(\\).*"
+  )
+endmacro()
+
+macro(clazy_custom_error_exception)
+  set(CTEST_CUSTOM_ERROR_EXCEPTION
+    ${CTEST_CUSTOM_ERROR_EXCEPTION}
+  )
+endmacro()
